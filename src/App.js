@@ -12,7 +12,7 @@ export default function App() {
       <Header />
       <div className="main-container">
         <Switch>
-          <Route path="/details">
+          <Route path="/details/:pokeId">
             <Details />
           </Route>
           <Route path="/listing">
