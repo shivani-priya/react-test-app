@@ -1,33 +1,55 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
 export default function Listing() {
-  const pokiArr = [
-    { name: "bulbasaur", id: 1 },
-    { name: "ivysaur", id: 2 },
-    { name: "venusaur", id: 3 },
-    { name: "charmander", id: 4 },
-    { name: "charmeleon", id: 5 },
-    { name: "charizard", id: 6 },
-    { name: "squirtle", id: 7 },
-    { name: "wartortle", id: 8 },
-    { name: "blastoise", id: 9 },
-    { name: "caterpie", id: 10 },
-    { name: "metapod", id: 11 },
-    { name: "butterfree", id: 12 },
-    { name: "weedle", id: 13 },
-    { name: "kakuna", id: 14 },
-    { name: "beedrill", id: 15 },
-    { name: "pidgey", id: 16 },
-    { name: "pidgeotto", id: 17 },
-    { name: "pidgeot", id: 18 },
-    { name: "rattata", id: 19 },
-    { name: "raticate", id: 20 }
-  ];
-  return pokiArr.map(pokemon => (
-    <div>
-      <Link to={'/details/'+pokemon.id}>
-        {pokemon.id} {pokemon.name}
-      </Link>
-    </div>
-  ));
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [pokemons, setPokemons] = useState([]);
+
+  useEffect(() => {
+    fetch("https://pokeapi.co/api/v2/pokemon/")
+      .then(res => res.json())
+      .then(
+        result => {
+          setIsLoaded(true);
+          setPokemons(result.results);
+        },
+        error => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+  }, []);
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  } else if (!isLoaded) {
+    return <div>Loading...</div>;
+  } else {
+    return (
+      <div className="listing-container">
+        {pokemons.map((pokemon, index) => (
+          <Card className="listing-card" key={index + 1}>
+            <CardContent>
+              <Link to={"/details/" + (index + 1)}>
+                Id: {index + 1}
+                <br />
+                Name: {pokemon.name}
+                <br />
+                <img
+                  src={
+                    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" +
+                    (index + 1) +
+                    ".png"
+                  }
+                />
+              </Link>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 }
