@@ -10,8 +10,8 @@ export default function Details() {
       .then(res => res.json())
       .then(result => {
         setIsLoaded(true);
-        setDetails(result.forms);
-        // console.log(details);
+        setDetails(result.game_indices);
+        // console.log(result.game_indices);
       });
   }
   useEffect(() => {
@@ -22,9 +22,9 @@ export default function Details() {
       <h1>Details</h1>
 
       <div>Loading details for {pokeId}</div>
-      <div>
-        {details.map((ability, index) => (
-          <p key={index}> Ability Name: {abilities.ability.name}</p>
+      <div className="details-container">
+        {details.map(details => (
+          <p>Name: {details.version.name}</p>
         ))}
       </div>
     </>
